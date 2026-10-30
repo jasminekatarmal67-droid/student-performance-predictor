@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-Powered Student Performance Predictor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<aside class="side" id="side">
+  <div class="brand"><span class="logo">SP</span><div><b>Student Predictor</b><small>Academic insights</small></div></div>
+  <nav id="nav">
+    <button data-view="dashboard" class="active">Dashboard</button>
+    <button data-view="predict">Student Input &amp; Prediction</button>
+    <button data-view="analytics">Performance Analytics</button>
+    <button data-view="recs">AI Recommendations</button>
+    <button data-view="planner">Study Planner</button>
+  </nav>
+  <p class="note">Scores come from a transparent weighted formula, not a trained machine-learning model.</p>
+</aside>
+
+<div class="main">
+<header class="top">
+  <button id="menu" aria-label="Open menu">&#9776;</button>
+  <h1 id="title">Dashboard</h1>
+  <button class="btn ghost" id="reset">Reset all data</button>
+</header>
+
+<section id="dashboard" class="view active">
+  <div class="hero card">
+    <div><h2>Welcome back, Faculty Advisor</h2>
+    <p>Here is how your students are doing this semester. Add a student on the prediction page and they will appear below.</p></div>
+    <button class="btn" data-go="predict">Predict a student</button>
+  </div>
+  <div class="grid4" id="stats"></div>
+  <div class="grid2">
+    <div class="card"><h3>Performance categories</h3><div class="chartbox"><canvas id="cDist"></canvas></div></div>
+    <div class="card"><h3>Attendance overview</h3><div class="chartbox"><canvas id="cAtt"></canvas></div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Performance statistics</h3><div id="pstats" class="pstats"></div></div>
+    <div class="card"><h3>Students</h3><div class="tablewrap"><table id="tbl"></table></div></div>
+  </div>
+</section>
+
+<section id="predict" class="view">
+  <div class="grid2 wide">
+    <form class="card" id="form" novalidate>
+      <h3>Student details</h3>
+      <div class="row2">
+        <div class="field"><label for="name">Student name</label><input id="name" maxlength="50" placeholder="e.g. Aarav Patel"><span class="err"></span></div>
+        <div class="field"><label for="course">Course</label><input id="course" maxlength="50" placeholder="e.g. B.Tech Computer Science"><span class="err"></span></div>
+      </div>
+      <div class="row2">
+        <div class="field"><label for="semester">Semester</label>
+          <select id="semester"><option value="">Select</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select><span class="err"></span></div>
+        <div class="field"><label for="prev">Previous exam marks (%)</label><input id="prev" type="number" min="0" max="100" step="0.1" placeholder="0 to 100"><span class="err"></span></div>
+      </div>
+      <div class="row3">
+        <div class="field"><label for="att">Attendance (%)</label><input id="att" type="number" min="0" max="100" step="0.1" placeholder="0 to 100"><span class="err"></span></div>
+        <div class="field"><label for="study">Study hours / day</label><input id="study" type="number" min="0" max="16" step="0.5" placeholder="0 to 16"><span class="err"></span></div>
+        <div class="field"><label for="assign">Assignments done (%)</label><input id="assign" type="number" min="0" max="100" step="1" placeholder="0 to 100"><span class="err"></span></div>
+      </div>
+      <h3 class="sub">Subject-wise marks</h3>
+      <div id="subjects"></div>
+      <span class="err" id="subErr"></span>
+      <div class="actions">
+        <button type="button" class="btn ghost" id="addSub">Add subject</button>
+        <button type="button" class="btn ghost" id="sample">Load sample data</button>
+        <button type="submit" class="btn">Predict performance</button>
+      </div>
+    </form>
+    <div class="card result" id="result"></div>
+  </div>
+</section>
+
+<section id="analytics" class="view">
+  <div id="anEmpty" class="card empty"></div>
+  <div id="anBody">
+    <div class="grid2">
+      <div class="card"><h3>Subject-wise marks</h3><div class="chartbox"><canvas id="cSub"></canvas></div></div>
+      <div class="card"><h3>Attendance and study performance</h3><div class="chartbox"><canvas id="cProf"></canvas></div></div>
+    </div>
+    <div class="card"><h3>Academic performance comparison with class average</h3><div class="chartbox tall"><canvas id="cComp"></canvas></div></div>
+  </div>
+</section>
+
+<section id="recs" class="view">
+  <div id="recBox"></div>
+</section>
+
+<section id="planner" class="view">
+  <form class="card" id="pform" novalidate>
+    <h3>Add a study task</h3>
+    <div class="row4">
+      <div class="field"><label for="pSub">Subject</label><input id="pSub" maxlength="40" placeholder="e.g. Physics"><span class="err"></span></div>
+      <div class="field"><label for="pDay">Day</label><select id="pDay"></select><span class="err"></span></div>
+      <div class="field"><label for="pTime">Study time</label><input id="pTime" type="time"><span class="err"></span></div>
+      <div class="field"><label for="pTask">Task</label><input id="pTask" maxlength="80" placeholder="e.g. Solve chapter 4 problems"><span class="err"></span></div>
+    </div>
+    <div class="actions"><button type="button" class="btn ghost" id="clearDone">Clear completed</button><button type="submit" class="btn">Add task</button></div>
+  </form>
+  <div class="card"><div class="phead"><h3>Weekly plan</h3><span id="pProg"></span></div><div class="bar"><i id="pBar"></i></div></div>
+  <div class="week" id="week"></div>
+</section>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
